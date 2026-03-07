@@ -1,0 +1,55 @@
+{
+    "project_context": {
+        "name": "Global Mobility Application Analyzer",
+        "stack": [
+            "Python",
+            "FastAPI",
+            "LangGraph",
+            "Azure AI Search",
+            "Google Gemini 3"
+        ],
+        "architecture_pattern": "Multi-Agent Supervisor with Agentic RAG"
+    },
+    "senior_architect_standards": {
+        "coding_style": [
+            "Follow PEP 8 for Python; use strict type hinting (mypy).",
+            "All API endpoints must have Pydantic models for request/response validation.",
+            "Implement structured logging for every LangGraph node transition."
+        ],
+        "agentic_workflow": [
+            "Prioritize 'Planning Mode' before writing code artifacts.",
+            "Use Parallel Edges in LangGraph wherever tasks are independent (e.g., Doc OCR & Legal Lookup).",
+            "Every 'Retriever' node MUST be followed by a 'Grader' node to prevent hallucinations."
+        ],
+        "security_compliance": [
+            "Zero-Trust: No hardcoded API keys. Use Azure Identity (Workload Identity Federation).",
+            "PII Scrubbing: Mask sensitive passport/bank data before sending to the LLM cloud.",
+            "Audit Trail: Every visa recommendation must cite the specific source URL/PDF chunk."
+        ]
+    },
+    "skill_mappings": {
+        "orchestration": [
+            "@langgraph",
+            "@ai-agents-architect"
+        ],
+        "data_science": [
+            "@vector-database-engineer",
+            "@semantic-data-modeling",
+            "@agent-evaluation"
+        ],
+        "delivery_ops": [
+            "@concise-planning",
+            "@jira-mcp",
+            "@architecture-decision-records"
+        ],
+        "verification": [
+            "@playwright-mcp",
+            "@security-auditor"
+        ]
+    },
+    "mcp_directives": {
+        "azure": "Use the Azure MCP for managing index schemas and blob storage triggers.",
+        "jira": "Automatically create a 'Bug' ticket if an evaluation score falls below 0.85.",
+        "browser": "Use Playwright MCP only for real-time status checks on government portals."
+    }
+}

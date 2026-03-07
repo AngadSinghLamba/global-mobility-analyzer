@@ -1,0 +1,62 @@
+[project]
+name = "global-mobility-analyzer"
+version = "0.1.0"
+description = "Multi-agent visa eligibility analyzer with Agentic RAG — LangGraph + Gemini 3 + Azure AI Search"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Angad" }]
+
+dependencies = [
+    # --- Core Orchestration ---
+    "langgraph>=0.3.0",
+    "langchain-core>=0.3.0",
+
+    # --- LLM ---
+    "google-genai>=1.0.0",         # Gemini 3 via Google AI Studio
+
+    # --- Retrieval ---
+    "azure-search-documents>=11.5.0",
+    "azure-identity>=1.18.0",
+
+    # --- API ---
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.10.0",
+
+    # --- Verification (Decision #7) ---
+    "playwright>=1.48.0",
+
+    # --- Utilities ---
+    "python-dotenv>=1.0.0",
+    "structlog>=24.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "mypy>=1.13.0",
+    "ruff>=0.8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
