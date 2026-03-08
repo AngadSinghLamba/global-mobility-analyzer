@@ -8,21 +8,21 @@
 
 ```mermaid
 graph TD
-    A["Applicant Profile (JSON)"] --> B["Supervisor Router"]
-    B -->|target_country=UK| C["UK Skilled Worker Subgraph"]
-    B -->|target_country=DE| D["DE Opportunity Card Subgraph"]
-    B -->|target_country=CA| E["CA Express Entry Subgraph"]
+    A[Applicant Profile JSON] --> B[Supervisor Router]
+    B -->|UK| C[UK Skilled Worker Subgraph]
+    B -->|DE| D[DE Opportunity Card Subgraph]
+    B -->|CA| E[CA Express Entry Subgraph]
 
-    C --> F["Report Generator"]
+    C --> F[Report Generator]
     D --> F
     E --> F
 
-    F --> G["Markdown Report + JSON API"]
+    F --> G[Markdown Report and JSON API]
 
-    subgraph "Observability Layer"
-        H["LangSmith Traces"]
-        I["Token Tracker"]
-        J["Cost Dashboard"]
+    subgraph Observability
+        H[LangSmith Traces]
+        I[Token Tracker]
+        J[Cost Dashboard]
     end
 
     C -.-> H
@@ -42,37 +42,36 @@ sequenceDiagram
     participant DC as Document Clerk
     participant AZ as Azure AI Search
     participant G as Grader
-    participant LA as Legal Analyst (Gemini 3)
-    participant V as Verifier (Playwright)
+    participant LA as Legal Analyst
+    participant V as Verifier
     participant RG as Report Generator
 
-    S->>DC: search_query + target_country
-    DC->>AZ: Hybrid search (semantic + keyword)
-    AZ-->>DC: Retrieved chunks (top-k)
-    DC->>G: chunks + search_query
+    S->>DC: Search query
+    DC->>AZ: Hybrid search
+    AZ-->>DC: Retrieved chunks
+    DC->>G: Chunks and query
 
-    alt Grader: RELEVANT (score ≥ 0.7)
-        G->>LA: chunks (standard path)
-    else Grader: AMBIGUOUS (conflicting sources)
-        G->>LA: chunks + conflicting_chunk_ids
-        Note over LA: Resolve by: (1) recency<br/>(2) authority level
-    else Grader: IRRELEVANT (score < 0.7) + retry < 2
-        G->>DC: Refined query (retry_count++)
-        DC->>AZ: Re-query with modified terms
+    alt RELEVANT
+        G->>LA: Chunks standard path
+    else AMBIGUOUS
+        G->>LA: Chunks with conflict flag
+        Note over LA: Resolve by recency and authority
+    else IRRELEVANT retry 1
+        G->>DC: Refined query
+        DC->>AZ: Re-query
         AZ-->>DC: New chunks
         DC->>G: Re-grade
-    else Grader: IRRELEVANT + retry ≥ 2
-        G->>LA: chunks + low_confidence flag
+    else IRRELEVANT max retries
+        G->>LA: Chunks with low confidence flag
     end
 
-    LA->>LA: Evaluate eligibility (structured JSON)
-    LA->>V: LegalAnalysisJSON
-    V->>V: Check live portal values vs cached
-    V-->>LA: VerificationResults (stale_data_detected?)
-
-    LA->>RG: LegalAnalysisJSON + VerificationResults
-    RG->>RG: JSON → Markdown with citations
-    RG-->>S: final_report
+    LA->>LA: Evaluate eligibility JSON
+    LA->>V: Legal Analysis JSON
+    V->>V: Check live portal vs cached
+    V-->>LA: Verification Results
+    LA->>RG: Analysis and Verification
+    RG->>RG: JSON to Markdown
+    RG-->>S: Final report
 ```
 
 ---

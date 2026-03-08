@@ -24,24 +24,24 @@ This is a retrieval and synthesis problem. This system solves it with Agentic RA
 
 ```mermaid
 graph TD
-    A["Applicant Profile"] --> B["Supervisor Router"]
-    B -->|UK| C["UK Skilled Worker"]
-    B -->|DE| D["DE Opportunity Card"]
-    B -->|CA| E["CA Express Entry"]
+    A[Applicant Profile] --> B[Supervisor Router]
+    B -->|UK| C[UK Skilled Worker]
+    B -->|DE| D[DE Opportunity Card]
+    B -->|CA| E[CA Express Entry]
 
-    subgraph "Each Visa Subgraph"
-        F["Document Clerk<br/>(Azure AI Search)"] --> G["3-Way Grader"]
-        G -->|relevant| H["Legal Analyst<br/>(Gemini 3)"]
+    subgraph VisaSubgraph
+        F[Document Clerk - AI Search] --> G[3-Way Grader]
+        G -->|relevant| H[Legal Analyst - Gemini 3]
         G -->|ambiguous| H
-        G -->|irrelevant| I["Re-Query (max 2x)"]
+        G -->|irrelevant| I[Re-Query max 2x]
         I --> F
-        H --> J["Stealth Verifier<br/>(Playwright)"]
+        H --> J[Stealth Verifier - Playwright]
     end
 
-    C --> K["Report Generator"]
+    C --> K[Report Generator]
     D --> K
     E --> K
-    K --> L["Markdown Report + JSON API"]
+    K --> L[Markdown Report and JSON API]
 
     style G fill:#f59e0b,color:#000
     style J fill:#3b82f6,color:#fff
